@@ -6,7 +6,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'click');
+  (e: 'click'): void;
 }>();
 
 const type = computed(() => {

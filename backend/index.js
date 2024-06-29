@@ -87,6 +87,21 @@ fastify.put(
   },
 );
 
+fastify.delete('/users/:id', async (req) => {
+  let deletedUser = null;
+  const id = req.params.id;
+
+  db.users = db.users.filter((user) => {
+    if (user.id !== id) {
+      return user;
+    }
+
+    deletedUser = user;
+  });
+
+  return deletedUser;
+});
+
 try {
   await fastify.listen({ port: 3000 });
 } catch (err) {

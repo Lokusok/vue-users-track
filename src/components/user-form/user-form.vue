@@ -11,7 +11,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'submit', value: IUser): void;
+  (e: 'submit', value: Omit<IUser, 'id'>): void;
 }>();
 
 const username = ref(props.defaultName || '');

@@ -20,6 +20,7 @@ function onUserCreate(user: Omit<IUser, 'id'>) {
     @submit="onUserCreate"
     :defaultName="props.defaultName"
     :defaultDescr="props.defaultDescr"
+    :resetOnSubmit="true"
     :submitText="props.submitText"
   />
 </template>

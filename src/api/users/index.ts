@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import { BASE_API_URL } from '..';
 import type { IPaginationResponse } from './types';
+import type { ISearchByOptions } from '@/types';
 
 export const BASE_API_URL_USERS = `${BASE_API_URL}/users`;
 
@@ -10,12 +11,7 @@ const apiInstance = axios.create({
 });
 
 export const handlers = {
-  getAllUsers: async () => {
-    const response = await apiInstance.get<IPaginationResponse<IUser>>('');
-    console.log('getAllUsers', response);
-    return response.data;
-  },
-  searchBy: async (options: any) => {
+  searchBy: async (options: ISearchByOptions) => {
     const response = await apiInstance.get<IPaginationResponse<IUser>>('', {
       params: {
         search: options.searchQuery,

@@ -7,14 +7,14 @@ const emit = defineEmits<{
 }>();
 
 const searchQuery = ref('');
-let timeout = null;
+let timeout: number | null = null;
 
 function emitSearchEvent() {
   emit('search', searchQuery.value);
 }
 
 function listenInput() {
-  clearTimeout(timeout);
+  if (timeout !== null) clearTimeout(timeout);
 
   timeout = setTimeout(() => {
     emitSearchEvent();
@@ -22,7 +22,7 @@ function listenInput() {
 }
 
 onUnmounted(() => {
-  clearTimeout(timeout);
+  if (timeout !== null) clearTimeout(timeout);
 });
 </script>
 

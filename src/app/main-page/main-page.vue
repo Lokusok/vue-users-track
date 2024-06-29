@@ -58,29 +58,32 @@ watch(
     </template>
 
     <template #body>
-      <div
-        class="content-row"
-        v-if="usersStore.waiting || usersStore.users.length > 0"
-      >
-        <template v-if="!usersStore.waiting && usersStore.users.length > 0">
-          <div class="grid">
-            <UserCard
-              v-for="user of usersStore.users"
-              :key="user.id"
-              :user="user"
+      <div v-if="usersStore.waiting || usersStore.users.length > 0">
+        <Transition class="content-line" name="grid-wrapper" mode="out-in">
+          <div
+            key="grid-content"
+            class="grid-content"
+            v-if="!usersStore.waiting && usersStore.users.length > 0"
+          >
+            <div class="grid">
+              <UserCard
+                v-for="user of usersStore.users"
+                :key="user.id"
+                :user="user"
+              />
+            </div>
+
+            <PaginationWrapper
+              v-if="isPaginationVisible"
+              :maxPage="optionsStore.maxPage"
+              :currentPage="optionsStore.currentPage"
             />
           </div>
 
-          <PaginationWrapper
-            v-if="isPaginationVisible"
-            :maxPage="optionsStore.maxPage"
-            :currentPage="optionsStore.currentPage"
-          />
-        </template>
-
-        <div v-else-if="usersStore.waiting" class="grid">
-          <Skeleton v-for="n in 4" :key="n" />
-        </div>
+          <div key="grid-skeletons" v-else-if="usersStore.waiting" class="grid">
+            <Skeleton v-for="n in 4" :key="n" />
+          </div>
+        </Transition>
       </div>
 
       <NoUsersNotifier v-else />
@@ -97,10 +100,20 @@ watch(
   width: 100%;
 }
 
-.content-row {
+.grid-content {
   display: flex;
   flex-direction: column;
   row-gap: 30px;
   align-items: center;
+}
+
+.grid-wrapper-enter-active,
+.grid-wrapper-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.grid-wrapper-enter-from,
+.grid-wrapper-leave-to {
+  opacity: 0;
 }
 </style>

@@ -16,9 +16,11 @@ const mode = ref<'view' | 'edit'>('view');
 
 const route = useRoute();
 const usersStore = useUsersStore();
+const userId =
+  typeof route.params.id === 'string' ? route.params.id : route.params.id[0];
 
 const currentUser = computed(() => {
-  return usersStore.getUserById(route.params.id);
+  return usersStore.getUserById(userId);
 });
 
 function onEditEvent() {

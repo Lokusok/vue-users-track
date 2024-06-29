@@ -3,12 +3,16 @@ import { handlers } from '@/api/users';
 import { useUsersStore } from '@/store/users/users-store';
 import { useOptionsStore } from '@/store/options/options-store';
 
+import type { ISearchByOptions } from '@/types';
+
 export const apiService = {
   createUser: async (user: Omit<IUser, 'id'>) => {
-    const usersStore = useUsersStore();
-    const newUser = await handlers.createUser(user);
+    const optionsStore = useOptionsStore();
 
-    usersStore.addUser(newUser);
+    await handlers.createUser(user);
+    apiService.searchBy({
+      page: optionsStore.currentPage,
+    });
   },
   deleteUserById: async (userId: IUser['id']) => {
     await handlers.deleteUser(userId);
@@ -18,7 +22,6 @@ export const apiService = {
 
     usersStore.setWaiting(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
     const response = await handlers.searchBy({
       page: optionsStore.currentPage,
     });
@@ -35,7 +38,7 @@ export const apiService = {
 
     usersStore.setWaiting(false);
   },
-  searchBy: async (options: any) => {
+  searchBy: async (options: ISearchByOptions) => {
     const usersStore = useUsersStore();
     const optionsStore = useOptionsStore();
 
@@ -52,7 +55,6 @@ export const apiService = {
   updateUser: async (user: IUser) => {
     const usersStore = useUsersStore();
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
     usersStore.setWaiting(true);
 
     const updatedUser = await handlers.updateUser(user);
