@@ -1,28 +1,30 @@
 import { defineStore } from 'pinia';
+import { handlers } from '@/api/users';
 
 export const useUsersStore = defineStore('users', {
   state: () => ({
-    users: [
-      {
-        id: 'fgfsdgsd',
-        name: 'John Doe',
-        descr:
-          'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam, adipisci.',
-      },
-      {
-        id: 'fgfsdsdfgsd',
-        name: 'Ada Doe',
-        descr:
-          'Ipsum dolor sit amet consectetur, adipisicing elit. Aperiam, adipisci.',
-      },
-      {
-        id: 'fgfsgdfgdgsd',
-        name: 'Hope Doe',
-        descr: 'Lorem consectetur, adipisicing elit. Aperiam, adipisci.',
-      },
-    ],
+    waiting: true,
+    users: [] as IUser[],
   }),
   actions: {
+    async fetchAllUsers() {
+      this.waiting = true;
+
+      const users = await handlers.getAllUsers();
+      this.users = users;
+
+      this.waiting = false;
+    },
+    async searchByQuery(searchQuery: string) {
+      this.waiting = true;
+
+      console.log('[Users store] searchByQuery, ', searchQuery);
+      const users = await handlers.searchByQuery(searchQuery);
+      this.users = users;
+
+      this.waiting = false;
+    },
+
     addUser(user: Omit<IUser, 'id'>) {
       const createdUser = {
         ...user,

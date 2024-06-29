@@ -13,9 +13,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "axios": "^1.7.2",
     "lucide-vue-next": "^0.399.0",
     "pinia": "^2.1.7",
     "sass": "^1.77.6",
+    "skeleton-loader-vue": "^1.0.10",
     "vue": "^3.4.29",
     "vue-router": "4"
   },

@@ -12,7 +12,23 @@ fastify.get('/', async () => {
 });
 
 fastify.get('/users', async (req) => {
-  return db.users;
+  const searchQuery = req.query.search?.toLowerCase();
+  let findUsers = db.users;
+
+  if (searchQuery) {
+    findUsers = db.users.filter((user) => {
+      for (const key in user) {
+        const value = user[key];
+        if (typeof value === 'string') {
+          const lowerCaseValue = value.toLowerCase();
+
+          if (lowerCaseValue.includes(searchQuery)) return user;
+        }
+      }
+    });
+  }
+
+  return findUsers;
 });
 
 fastify.get('/users/:id', async (req) => {
@@ -27,7 +43,7 @@ fastify.post(
   async (req) => {
     db.users.push(req.body);
     return db.users;
-  }
+  },
 );
 
 fastify.put(
@@ -38,7 +54,7 @@ fastify.put(
   async (req) => {
     db.users = db.users.map((user) => (user.id === req.params.id ? req.body : user));
     return db.users;
-  }
+  },
 );
 
 fastify.delete(
@@ -49,7 +65,7 @@ fastify.delete(
   async (req) => {
     db.users = db.users.filter((user) => user.id !== req.params.id);
     return db.users;
-  }
+  },
 );
 
 try {

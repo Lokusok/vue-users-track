@@ -1,20 +1,29 @@
 <script setup>
+import { onMounted } from 'vue';
+
+import SearchWrapper from '@/containers/search-wrapper/search-wrapper.vue';
+
 import PageLayout from '@/components/page-layout/page-layout.vue';
 import Title from '@/components/page-title/page-title.vue';
 import UserCard from '@/components/user-card/user-card.vue';
 import NoUsersNotifier from '@/components/no-users-notifier/no-users-notifier.vue';
-import Search from '@/components/search/search.vue';
 import Pagination from '@/components/pagination/pagination.vue';
+import Skeleton from '@/components/skeleton/skeleton.vue';
 
 import { useUsersStore } from '@/store/users/users-store.ts';
 
 const usersStore = useUsersStore();
+
+onMounted(async () => {
+  usersStore.fetchAllUsers();
+});
 </script>
 
 <template>
   <PageLayout>
     <template #header>
       <Title>Главная. Список всех пользователей</Title>
+
       <div
         :style="{
           display: 'flex',
@@ -22,21 +31,30 @@ const usersStore = useUsersStore();
           marginTop: '15px',
         }"
       >
-        <Search />
+        <SearchWrapper />
       </div>
     </template>
 
     <template #body>
-      <div class="content-row" v-if="usersStore.users.length > 0">
-        <div class="grid">
-          <UserCard
-            v-for="user of usersStore.users"
-            :key="user.id"
-            :user="user"
-          />
-        </div>
+      <div
+        class="content-row"
+        v-if="usersStore.waiting || usersStore.users.length > 0"
+      >
+        <template v-if="usersStore.users.length > 0">
+          <div class="grid">
+            <UserCard
+              v-for="user of usersStore.users"
+              :key="user.id"
+              :user="user"
+            />
+          </div>
 
-        <Pagination />
+          <Pagination />
+        </template>
+
+        <div v-else-if="usersStore.waiting" class="grid">
+          <Skeleton v-for="n in 4" :key="n" />
+        </div>
       </div>
 
       <NoUsersNotifier v-else />
@@ -49,6 +67,8 @@ const usersStore = useUsersStore();
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 30px;
+  grid-auto-rows: 200px;
+  width: 100%;
 }
 
 .content-row {

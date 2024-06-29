@@ -1,11 +1,42 @@
 <script setup lang="ts">
+import { defineEmits, ref, onUnmount } from 'vue';
 import { Search } from 'lucide-vue-next';
+
+const emit = defineEmits<{
+  (e: 'search', value: string): void;
+}>();
+
+const searchQuery = ref('');
+let timeout = null;
+
+function emitSearchEvent() {
+  emit('search', searchQuery.value);
+}
+
+function listenInput() {
+  clearTimeout(timeout);
+
+  timeout = setTimeout(() => {
+    emitSearchEvent();
+  }, 500);
+}
+
+onUnmount(() => {
+  clearTimeout(timeout);
+});
 </script>
 
 <template>
   <div class="search">
     <Search class="search__icon" color="#ddd" :size="24" />
-    <input class="search__input" type="text" placeholder="Поиск" />
+    <input
+      v-model.trim="searchQuery"
+      @keydown.enter="emitSearchEvent"
+      @input="listenInput"
+      class="search__input"
+      type="text"
+      placeholder="Поиск"
+    />
   </div>
 </template>
 
