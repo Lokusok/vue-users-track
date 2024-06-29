@@ -6,6 +6,8 @@ const props = defineProps<{
   defaultName?: string;
   defaultDescr?: string;
   disableIfDefaults?: boolean;
+  resetOnSubmit?: boolean;
+  disableAll?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -20,7 +22,8 @@ const isSubmitBtnDisabled = computed(() => {
     [username.value, descr.value].some((el) => el.length === 0) ||
     (props.disableIfDefaults &&
       username.value === props.defaultName &&
-      descr.value === props.defaultDescr)
+      descr.value === props.defaultDescr) ||
+    props.disableAll
   );
 });
 
@@ -32,8 +35,10 @@ function submitForm() {
 
   emit('submit', user);
 
-  username.value = '';
-  descr.value = '';
+  if (props.resetOnSubmit) {
+    username.value = '';
+    descr.value = '';
+  }
 }
 </script>
 
@@ -43,6 +48,7 @@ function submitForm() {
       <label class="user-form__label">
         <span class="user-form__text">Имя пользователя:</span>
         <input
+          :disabled="disableAll"
           v-model.trim="username"
           class="user-form__input"
           type="text"
@@ -55,6 +61,7 @@ function submitForm() {
       <label class="user-form__label">
         <span class="user-form__text">Описание:</span>
         <textarea
+          :disabled="disableAll"
           v-model.trim="descr"
           class="user-form__input user-form__input_textarea"
           formControlName="descr"

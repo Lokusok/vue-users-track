@@ -12,7 +12,6 @@ const emit = defineEmits<{
 }>();
 
 function emitPageChangeEvent(page: number) {
-  console.log({ page });
   emit('pageChange', page);
 }
 </script>

@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 
@@ -11,12 +13,12 @@ fastify.get('/', async () => {
   return db;
 });
 
-const perPage = 4;
-const maxPage = Math.ceil(db.users.length / perPage);
-
 fastify.get('/users', async (req) => {
+  const perPage = 4;
+  const maxPage = Math.ceil(db.users.length / perPage);
+
   const searchQuery = req.query.search?.toLowerCase();
-  const page = req.query.page;
+  const page = req.query.page ?? 1;
   let findUsers = db.users;
 
   if (searchQuery) {
@@ -36,11 +38,9 @@ fastify.get('/users', async (req) => {
   const endIndex = perPage * page || Infinity;
   const resultUsers = findUsers.slice(startIndex, endIndex);
 
-  console.log(resultUsers);
-  console.log({ page, perPage, startIndex, endIndex });
-
   return {
     data: resultUsers,
+    page,
     perPage,
     maxPage,
   };
@@ -56,8 +56,14 @@ fastify.post(
     schema: POST.users,
   },
   async (req) => {
-    db.users.push(req.body);
-    return db.users;
+    const user = {
+      ...req.body,
+      id: crypto.randomUUID(),
+    };
+
+    db.users.push(user);
+
+    return user;
   },
 );
 
@@ -67,19 +73,17 @@ fastify.put(
     schema: PUT.users,
   },
   async (req) => {
-    db.users = db.users.map((user) => (user.id === req.params.id ? req.body : user));
-    return db.users;
-  },
-);
+    let updatedUser = null;
 
-fastify.delete(
-  '/users/:id',
-  {
-    schema: DELETE.users,
-  },
-  async (req) => {
-    db.users = db.users.filter((user) => user.id !== req.params.id);
-    return db.users;
+    db.users = db.users.map((user) => {
+      if (user.id === req.params.id) {
+        updatedUser = req.body;
+        return req.body;
+      }
+      return user;
+    });
+
+    return updatedUser;
   },
 );
 

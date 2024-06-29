@@ -2,7 +2,7 @@
 import { defineProps } from 'vue';
 
 import UserForm from '@/components/user-form/user-form.vue';
-import { useUsersStore } from '@/store/users/users-store';
+import { apiService } from '@/services/api';
 
 const props = defineProps<{
   submitText: string;
@@ -10,10 +10,8 @@ const props = defineProps<{
   defaultDescr?: string;
 }>();
 
-const usersStore = useUsersStore();
-
 function onUserCreate(user: Omit<IUser, 'id'>) {
-  usersStore.addUser(user);
+  apiService.createUser(user);
 }
 </script>
 

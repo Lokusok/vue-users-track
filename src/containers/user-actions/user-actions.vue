@@ -4,7 +4,9 @@ import { useRouter } from 'vue-router';
 
 import Button from '@/components/button/button.vue';
 
-import { useUsersStore } from '@/store/users/users-store';
+// import { useUsersStore } from '@/store/users/users-store';
+
+import { apiService } from '@/services/api';
 
 const props = defineProps<{
   user: IUser;
@@ -14,11 +16,12 @@ const emit = defineEmits<{
   (e: 'edit'): void;
 }>();
 
-const usersStore = useUsersStore();
+// const usersStore = useUsersStore();
 const router = useRouter();
 
 function onClickDelete() {
-  usersStore.deleteUserById(props.user.id);
+  // usersStore.deleteUserById(props.user.id);
+  apiService.deleteUserById(props.user.id);
   router.replace({ name: 'main' });
 }
 

@@ -3,11 +3,10 @@ export const POST = {
     body: {
       type: 'object',
       properties: {
-        id: { type: 'string' },
         name: { type: 'string' },
         descr: { type: 'string' },
       },
-      required: ['id', 'name', 'descr'],
+      required: ['name', 'descr'],
     },
   },
 };

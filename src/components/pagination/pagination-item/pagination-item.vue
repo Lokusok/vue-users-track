@@ -37,6 +37,7 @@ const props = defineProps<{
 
   &.active {
     background: rgb(0, 68, 70, 1);
+    pointer-events: none;
   }
 
   &:hover {

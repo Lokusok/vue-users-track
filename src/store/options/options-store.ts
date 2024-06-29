@@ -9,7 +9,6 @@ export const useOptionsStore = defineStore('options', {
   }),
   actions: {
     setCurrentPage(page: number) {
-      console.log({ page });
       this.currentPage = page;
     },
     setSearchQuery(searchQuery: string) {

@@ -11,7 +11,12 @@ const route = useRoute();
         <ul class="nav__list">
           <li class="nav__list-item">
             <RouterLink
-              to="/"
+              :to="{
+                name: 'list',
+                params: {
+                  page: 1,
+                },
+              }"
               class="nav__list-link"
               :class="{
                 active: route.path === '/',
@@ -20,14 +25,7 @@ const route = useRoute();
             >
           </li>
           <li class="nav__list-item">
-            <RouterLink
-              to="/create"
-              class="nav__list-link"
-              :class="{
-                active: route.path === '/create',
-              }"
-              >Создать</RouterLink
-            >
+            <RouterLink to="/create" class="nav__list-link">Создать</RouterLink>
           </li>
         </ul>
       </nav>
@@ -54,6 +52,7 @@ const route = useRoute();
   color: #fff;
   text-decoration: none;
 
+  &.router-link-active,
   &.active {
     opacity: 0.5;
     text-decoration: underline;

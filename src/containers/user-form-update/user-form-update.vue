@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref } from 'vue';
 
 import UserForm from '@/components/user-form/user-form.vue';
-import { useUsersStore } from '@/store/users/users-store';
+
+import { apiService } from '@/services/api';
 
 const props = defineProps<{
   user: IUser;
@@ -15,10 +16,18 @@ const emit = defineEmits<{
   (id: 'success'): void;
 }>();
 
-const usersStore = useUsersStore();
+const waiting = ref(false);
 
-function onUserUpdate(user: Omit<IUser, 'id'>) {
-  usersStore.updateUserById(props.user.id, user);
+async function onUserUpdate(user: Omit<IUser, 'id'>) {
+  const updatedUser = {
+    ...user,
+    id: props.user.id,
+  };
+
+  waiting.value = true;
+  await apiService.updateUser(updatedUser);
+  waiting.value = false;
+
   emit('success');
 }
 </script>
@@ -29,6 +38,8 @@ function onUserUpdate(user: Omit<IUser, 'id'>) {
     :defaultName="props.defaultName"
     :defaultDescr="props.defaultDescr"
     :disableIfDefaults="true"
+    :resetOnSubmit="false"
+    :disableAll="waiting"
     :submitText="props.submitText"
   />
 </template>

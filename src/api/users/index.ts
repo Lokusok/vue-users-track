@@ -15,22 +15,27 @@ export const handlers = {
     console.log('getAllUsers', response);
     return response.data;
   },
-  getUsersByPage: async (page: number) => {
-    console.log('getUsersByPage:', page);
+  searchBy: async (options: any) => {
     const response = await apiInstance.get<IPaginationResponse<IUser>>('', {
       params: {
-        page,
+        search: options.searchQuery,
+        page: options.page,
       },
     });
+    console.log('searchBy:', response);
     return response.data;
   },
-  searchByQuery: async (searchQuery: string) => {
-    const response = await apiInstance.get<IPaginationResponse<IUser>>('', {
-      params: {
-        search: searchQuery,
-      },
-    });
-    console.log('searchByQuery:', response);
+  createUser: async (user: Omit<IUser, 'id'>) => {
+    const response = await apiInstance.post<IUser>('', user);
+    console.log('createUser:', response);
+    return response.data;
+  },
+  deleteUser: async (userId: IUser['id']) => {
+    const response = await apiInstance.delete<IUser>(userId);
+    return response.data;
+  },
+  updateUser: async (user: IUser) => {
+    const response = await apiInstance.put<IUser>(`/${user.id}`, user);
     return response.data;
   },
 };

@@ -1,5 +1,5 @@
 <script setup>
-import { watchEffect, computed } from 'vue';
+import { watch, computed, onMounted } from 'vue';
 
 import SearchWrapper from '@/containers/search-wrapper/search-wrapper.vue';
 import PaginationWrapper from '@/containers/pagination-wrapper/pagination-wrapper.vue';
@@ -19,12 +19,26 @@ const usersStore = useUsersStore();
 const optionsStore = useOptionsStore();
 
 const isPaginationVisible = computed(() => {
-  return !optionsStore.searchQuery;
+  return optionsStore.maxPage !== 1;
 });
 
-watchEffect(async () => {
-  apiService.fetchUsersByPage(optionsStore.currentPage);
+onMounted(() => {
+  if (usersStore.users.length === 0) {
+    apiService.searchBy({
+      page: optionsStore.currentPage,
+    });
+  }
 });
+
+watch(
+  () => [optionsStore.currentPage, optionsStore.searchQuery],
+  async () => {
+    apiService.searchBy({
+      page: optionsStore.currentPage,
+      searchQuery: optionsStore.searchQuery,
+    });
+  },
+);
 </script>
 
 <template>
@@ -48,7 +62,7 @@ watchEffect(async () => {
         class="content-row"
         v-if="usersStore.waiting || usersStore.users.length > 0"
       >
-        <template v-if="usersStore.users.length > 0">
+        <template v-if="!usersStore.waiting && usersStore.users.length > 0">
           <div class="grid">
             <UserCard
               v-for="user of usersStore.users"
