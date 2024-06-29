@@ -53,6 +53,7 @@ function submitForm() {
           class="user-form__input"
           type="text"
           formControlName="name"
+          data-testid="username-input"
         />
       </label>
     </div>
@@ -65,6 +66,7 @@ function submitForm() {
           v-model.trim="descr"
           class="user-form__input user-form__input_textarea"
           formControlName="descr"
+          data-testid="descr-input"
         ></textarea>
       </label>
     </div>
@@ -74,6 +76,7 @@ function submitForm() {
         :disabled="isSubmitBtnDisabled"
         class="user-form__submit-btn"
         type="submit"
+        data-testid="submit-btn"
       >
         {{ props.submitText }}
       </button>
