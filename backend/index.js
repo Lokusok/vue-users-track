@@ -11,8 +11,12 @@ fastify.get('/', async () => {
   return db;
 });
 
+const perPage = 4;
+const maxPage = Math.ceil(db.users.length / perPage);
+
 fastify.get('/users', async (req) => {
   const searchQuery = req.query.search?.toLowerCase();
+  const page = req.query.page;
   let findUsers = db.users;
 
   if (searchQuery) {
@@ -28,7 +32,18 @@ fastify.get('/users', async (req) => {
     });
   }
 
-  return findUsers;
+  const startIndex = +page > 1 ? (page - 1) * perPage : 0;
+  const endIndex = perPage * page || Infinity;
+  const resultUsers = findUsers.slice(startIndex, endIndex);
+
+  console.log(resultUsers);
+  console.log({ page, perPage, startIndex, endIndex });
+
+  return {
+    data: resultUsers,
+    perPage,
+    maxPage,
+  };
 });
 
 fastify.get('/users/:id', async (req) => {

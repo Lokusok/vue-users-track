@@ -1,13 +1,31 @@
 <script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
 import PaginationItem from './pagination-item/pagination-item.vue';
+
+const props = defineProps<{
+  maxPage: number;
+  currentPage: number;
+}>();
+
+const emit = defineEmits<{
+  (e: 'pageChange', value: number): void;
+}>();
+
+function emitPageChangeEvent(page: number) {
+  console.log({ page });
+  emit('pageChange', page);
+}
 </script>
 
 <template>
   <div class="pagination-list">
-    <PaginationItem :isActive="true" :order="1" />
-    <PaginationItem :order="2" />
-    <PaginationItem :order="3" />
-    <PaginationItem :order="4" />
+    <PaginationItem
+      v-for="order of props.maxPage"
+      @click="emitPageChangeEvent(order)"
+      :isActive="order === currentPage"
+      :order="order"
+      :key="order"
+    />
   </div>
 </template>
 

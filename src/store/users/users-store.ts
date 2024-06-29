@@ -7,14 +7,6 @@ export const useUsersStore = defineStore('users', {
     users: [] as IUser[],
   }),
   actions: {
-    async fetchAllUsers() {
-      this.waiting = true;
-
-      const users = await handlers.getAllUsers();
-      this.users = users;
-
-      this.waiting = false;
-    },
     async searchByQuery(searchQuery: string) {
       this.waiting = true;
 
@@ -24,7 +16,9 @@ export const useUsersStore = defineStore('users', {
 
       this.waiting = false;
     },
-
+    setUsers(users: IUser[]) {
+      this.users = users;
+    },
     addUser(user: Omit<IUser, 'id'>) {
       const createdUser = {
         ...user,

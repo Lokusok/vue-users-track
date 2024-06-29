@@ -1,21 +1,29 @@
 <script setup>
-import { onMounted } from 'vue';
+import { watchEffect, computed } from 'vue';
 
 import SearchWrapper from '@/containers/search-wrapper/search-wrapper.vue';
+import PaginationWrapper from '@/containers/pagination-wrapper/pagination-wrapper.vue';
 
 import PageLayout from '@/components/page-layout/page-layout.vue';
 import Title from '@/components/page-title/page-title.vue';
 import UserCard from '@/components/user-card/user-card.vue';
 import NoUsersNotifier from '@/components/no-users-notifier/no-users-notifier.vue';
-import Pagination from '@/components/pagination/pagination.vue';
 import Skeleton from '@/components/skeleton/skeleton.vue';
 
 import { useUsersStore } from '@/store/users/users-store.ts';
+import { useOptionsStore } from '@/store/options/options-store.ts';
+
+import { apiService } from '@/services/api';
 
 const usersStore = useUsersStore();
+const optionsStore = useOptionsStore();
 
-onMounted(async () => {
-  usersStore.fetchAllUsers();
+const isPaginationVisible = computed(() => {
+  return !optionsStore.searchQuery;
+});
+
+watchEffect(async () => {
+  apiService.fetchUsersByPage(optionsStore.currentPage);
 });
 </script>
 
@@ -49,7 +57,11 @@ onMounted(async () => {
             />
           </div>
 
-          <Pagination />
+          <PaginationWrapper
+            v-if="isPaginationVisible"
+            :maxPage="optionsStore.maxPage"
+            :currentPage="optionsStore.currentPage"
+          />
         </template>
 
         <div v-else-if="usersStore.waiting" class="grid">

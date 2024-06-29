@@ -8,18 +8,20 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
+  <button
     class="pagination-item"
     :class="{
       active: props.isActive,
     }"
   >
     {{ props.order }}
-  </div>
+  </button>
 </template>
 
 <style scoped lang="scss">
 .pagination-item {
+  appearance: none;
+  border: none;
   width: 30px;
   height: 30px;
   display: flex;
@@ -39,6 +41,10 @@ const props = defineProps<{
 
   &:hover {
     opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.5;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, ref, onUnmount } from 'vue';
+import { defineEmits, ref, onUnmounted } from 'vue';
 import { Search } from 'lucide-vue-next';
 
 const emit = defineEmits<{
@@ -21,7 +21,7 @@ function listenInput() {
   }, 500);
 }
 
-onUnmount(() => {
+onUnmounted(() => {
   clearTimeout(timeout);
 });
 </script>
