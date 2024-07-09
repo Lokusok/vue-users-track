@@ -4,8 +4,6 @@ import { createApp } from 'vue';
 import { createWebHistory, createRouter } from 'vue-router';
 import { createPinia } from 'pinia';
 
-import VueSkeletonLoader from 'skeleton-loader-vue';
-
 import App from './app/app.vue';
 
 import MainPage from './app/main-page/main-page.vue';
@@ -43,8 +41,6 @@ const router = createRouter({
 const pinia = createPinia();
 
 const app = createApp(App);
-
-app.component('vue-skeleton-loader', VueSkeletonLoader);
 
 app.use(router);
 app.use(pinia);

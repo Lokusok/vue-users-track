@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
 import UserActions from '@/containers/user-actions/user-actions.vue';
@@ -10,17 +10,18 @@ import PageLayout from '@/components/page-layout/page-layout.vue';
 import Title from '@/components/page-title/page-title.vue';
 import UserInfo from '@/components/user-info/user-info.vue';
 
-import { useUsersStore } from '@/store/users/users-store';
+import { apiService } from '@/services/api';
 
 const mode = ref<'view' | 'edit'>('view');
 
 const route = useRoute();
-const usersStore = useUsersStore();
 const userId =
   typeof route.params.id === 'string' ? route.params.id : route.params.id[0];
 
-const currentUser = computed(() => {
-  return usersStore.getUserById(userId);
+const currentUser = ref(null);
+
+onMounted(async () => {
+  currentUser.value = await apiService.getUserById(userId);
 });
 
 function onEditEvent() {

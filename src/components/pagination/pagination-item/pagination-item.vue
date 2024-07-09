@@ -4,11 +4,28 @@ import { defineProps } from 'vue';
 const props = defineProps<{
   isActive?: boolean;
   order: number;
+  asLink?: boolean;
 }>();
 </script>
 
 <template>
+  <RouterLink
+    v-if="props.asLink"
+    class="pagination-item"
+    :to="{
+      name: 'list',
+      params: {
+        page: props.order,
+      },
+    }"
+    :class="{
+      active: props.isActive,
+    }"
+    >{{ props.order }}</RouterLink
+  >
+
   <button
+    v-else
     class="pagination-item"
     :class="{
       active: props.isActive,
@@ -30,6 +47,7 @@ const props = defineProps<{
   color: #fff;
   border-radius: 6px;
   cursor: pointer;
+  text-decoration: none;
   background: rgb(0, 128, 128, 1);
   transition:
     opacity ease 0.2s,

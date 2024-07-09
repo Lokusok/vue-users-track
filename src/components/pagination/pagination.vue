@@ -21,6 +21,7 @@ function emitPageChangeEvent(page: number) {
     <PaginationItem
       v-for="order of props.maxPage"
       @click="emitPageChangeEvent(order)"
+      :asLink="true"
       :isActive="order === currentPage"
       :order="order"
       :key="order"

@@ -14,6 +14,10 @@ export const apiService = {
       page: optionsStore.currentPage,
     });
   },
+  getUserById: async (userId: IUser['id']) => {
+    const user = await handlers.fetchUserById(userId);
+    return user;
+  },
   deleteUserById: async (userId: IUser['id']) => {
     await handlers.deleteUser(userId);
 

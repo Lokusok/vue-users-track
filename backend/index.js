@@ -34,6 +34,15 @@ fastify.get('/users', async (req) => {
     });
   }
 
+  if (searchQuery) {
+    return {
+      data: findUsers,
+      page: 1,
+      perPage: Infinity,
+      maxPage: 1,
+    };
+  }
+
   const startIndex = +page > 1 ? (page - 1) * perPage : 0;
   const endIndex = perPage * page || Infinity;
   const resultUsers = findUsers.slice(startIndex, endIndex);

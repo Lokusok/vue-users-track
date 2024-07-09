@@ -19,7 +19,7 @@ const route = useRoute();
               }"
               class="nav__list-link"
               :class="{
-                active: route.path === '/',
+                active: ['list', 'main'].includes(route.name),
               }"
               >Главная</RouterLink
             >
